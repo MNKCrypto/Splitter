@@ -16,7 +16,7 @@ contract Splitter {
         emit regRec(receiver2);
     }
     
-    function splitFunds() public payable returns(bool){
+    function splitFunds() public payable {
         /* Making sure thatwe have required addresses*/
         require (receiver1 != address(0) && receiver2 != address(0));
         /* Transferring funds to the first receiver */ 
