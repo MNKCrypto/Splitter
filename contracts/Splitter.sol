@@ -1,40 +1,33 @@
 pragma solidity ^0.4.21;
 
 contract Splitter {
-    uint private recCount;
-    mapping(address => uint) addrIndex;
-    address[] receivers;
-    event recEvent(address indexed receiver);
+    /* Receiver1 address */
+    address public receiver1;
+    /* Receiver2 address */
+    address public receiver2;
+    event regRec(address indexed);
     event tranEvent(address indexed receiver, uint256 value); 
     /* constructor */
-    function Splitter (uint count) public {
-        /* Setting up a limit on the receivers count at the time of contract deployment */
-        recCount = count;
-    }
-    function addReciever(address rec) public{
-        /* Validating the count of recievers before adding a new entry */
-        require(receivers.length < recCount);
-        /* Validating for duplicate address entry */
-        require(addrIndex[rec] == 0);
-        receivers.push(rec);
-        addrIndex[rec] = receivers.length;
-        /* Logging addition of new reciever */
-        emit recEvent(rec);
+    constructor (address _rec1, address _rec2) public {
+        /* Setup the reciever accounts */
+        receiver1 = _rec1;
+        emit regRec(receiver1);
+        receiver2 = _rec2;
+        emit regRec(receiver2);
     }
     
-    function splitEther() public payable{
-        /* Validating whether there is atleast one reciever */
-        require(receivers.length>0);
-        /* Sharing the ether equally among the recievers */
-        uint256 singleShare = msg.value/(receivers.length);
-        /* Making sure that share is valid */
-        require (singleShare > 0);
-        for (uint i=0; i< receivers.length; i++){
-            receivers[i].transfer(singleShare);
-            /* Logging split transfer for each of the recievers */
-             emit tranEvent(receivers[i],singleShare);
+    function splitFunds() public payable returns(bool){
+        /* Making sure thatwe have required addresses*/
+        require (receiver1 != address(0) && receiver2 != address(0));
+        /* Transferring funds to the first receiver */ 
+        receiver1.transfer(msg.value/2);
+        /* Logging split transfer for each of the recievers */
+        emit tranEvent(receiver1,msg.value/2);
+        /* Transferring funds to the second receiver */  
+        receiver2.transfer(msg.value/2);
+        /* Logging split transfer for each of the recievers */
+        emit tranEvent(receiver2,msg.value/2);
         }
     }
-}
 
 

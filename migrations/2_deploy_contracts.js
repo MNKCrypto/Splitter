@@ -1,8 +1,9 @@
 var Splitter = artifacts.require("./Splitter.sol");
 module.exports = function(deployer) {
-var recCount = 2;
+accounts = web3.eth.accounts;
+console.log("Using Receivers from : " + accounts);
 console.log("Deploying Splitter Contract");
-deployer.deploy(Splitter,recCount);
+deployer.deploy(Splitter,accounts[1],accounts[2]);
 };
 
 
