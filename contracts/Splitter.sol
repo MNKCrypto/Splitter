@@ -1,7 +1,7 @@
 pragma solidity ^0.4.21;
 
 //@title Splitter Contract  - Allows a single party to split ether among two recievers
-//@author Naveen Kumar - <naveen.k.manickam@gmail.com>
+//@author Naveen Kumar M - <naveen.k.manickam@gmail.com>
 contract Splitter {
     address public owner;
     mapping(address=>uint) public userBalance;
