@@ -3,7 +3,7 @@ var Splitter = artifacts.require("./Splitter.sol");
 contract("Testing Splitter" , accounts => {
 let instance
 beforeEach("deploy Splitter", async function() {
-instance = await Splitter.new(accounts[1],accounts[2]);
+instance = await Splitter.new();
 })
 it("Testing perfect slpit", done => {
 var rec1InitialBalance;
@@ -18,7 +18,7 @@ return instance.userBalance(accounts[2])
 }). 
 then (balance => {
 rec2InitialBalance = web3.toBigNumber(balance);
-return instance.splitFunds({from:accounts[0],value:web3.toWei(4,"ether")})
+return instance.splitFunds(accounts[1],accounts[2],{from:accounts[0],value:web3.toWei(4,"ether")})
 }).then (txInfo => {
 assert.strictEqual(txInfo.logs.length,1,"Validating Split Transaction");
 return instance.userBalance(accounts[1]);
@@ -45,7 +45,7 @@ ownerInitialBalance = web3.toBigNumber(ownerInitialBalance);
 var splitFund = web3.toBigNumber("100000000000000000000");
 var ownerRefund = web3.toBigNumber("000000000000000000001");
 
-let txInfo = await instance.splitFunds({from:accounts[0],value:"200000000000000000001"});
+let txInfo = await instance.splitFunds(accounts[1],accounts[2],{from:accounts[0],value:"200000000000000000001"});
 assert.strictEqual(txInfo.logs.length,1,"Validating Split Transaction");
 var rec1FinalBalance = await instance.userBalance(accounts[1]);
 var rec2FinalBalance = await instance.userBalance(accounts[2]);
@@ -66,7 +66,7 @@ assert.equal(updatedOwnerBalance.toNumber(),ownerFinalBalance.toNumber(),"Valida
 
 it("Testing withdrawal", function() {
 var initialBalance;
-return instance.splitFunds({from:accounts[0],value:web3.toWei(4,"ether")}).
+return instance.splitFunds(accounts[1],accounts[2],{from:accounts[0],value:web3.toWei(4,"ether")}).
 then (txInfo => {
 assert.strictEqual(txInfo.logs.length,1,"Validating Split Transaction");
 return new Promise((resolve,reject) => {

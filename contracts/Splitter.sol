@@ -4,11 +4,9 @@ pragma solidity ^0.4.21;
 //@author Naveen Kumar - <naveen.k.manickam@gmail.com>
 contract Splitter {
     address public owner;
-    address public receiver1;
-    address public receiver2;
     mapping(address=>uint) public userBalance;
     /* Event to log registered receivers */
-    event LogRegisteredReceiver (address indexed, address indexed, address indexed);
+    event LogCreateContract(address indexed owner);
     /* Event to log transactions */
     event LogSplit(address indexed receiver1,address indexed reciever2,address indexed owner, uint256 receiverShare, uint256 ownerShare); 
     /* Event to log withdrawals */
@@ -22,19 +20,17 @@ contract Splitter {
 
     // @dev constructor - validates whether valid receiver addresses are passed and stores them in
     // contract storage
-    constructor (address _rec1, address _rec2) public  {
-        /* Setup the reciever accounts and owner accounts */
-        require (_rec1 != address(0) && _rec2 != address(0), "Receiver Addresses are required");
+    constructor () public  {
         owner = msg.sender;
-        receiver1 = _rec1;
-        receiver2 = _rec2;
-        emit LogRegisteredReceiver(receiver1,receiver2,owner);
+        emit LogCreateContract(owner);
     }	
 
     // Public functions
     // @dev This function allows owner address to split funds equally
     // among the receivers
-    function splitFunds() public payable onlyOwner{
+    function splitFunds(address receiver1, address receiver2) public payable onlyOwner{
+        /* Validate receiver address */
+       require (receiver1 != address(0) && receiver2 != address(0), "Receiver Addresses are required");
        uint fundsSent = msg.value;
        uint singleShare = fundsSent/2; 
        userBalance[receiver1] += singleShare;  
