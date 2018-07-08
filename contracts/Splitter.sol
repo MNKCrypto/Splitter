@@ -30,13 +30,17 @@ contract Splitter {
     // among the receivers
     function splitFunds(address receiver1, address receiver2) public payable onlyOwner{
         /* Validate receiver address */
-       require (receiver1 != address(0) && receiver2 != address(0), "Receiver Addresses are required");
+       require (receiver1 != address(0), "Receiver 1 Address is required");
+       require (receiver2 != address(0), "Receiver 2 Address is required");
        uint fundsSent = msg.value;
        uint singleShare = fundsSent/2; 
+       uint remainingShare = 0;
        userBalance[receiver1] += singleShare;  
        userBalance[receiver2] += singleShare;
-       uint remainingShare = fundsSent - (2*singleShare);
-       userBalance[owner]  += remainingShare;
+       if (fundsSent  != (2*singleShare)){
+          userBalance[msg.sender]  += 1;
+	  remainingShare = 1;
+       }	
        emit LogSplit(receiver1,receiver2,owner,singleShare,remainingShare);
     }
 
@@ -47,10 +51,10 @@ contract Splitter {
        address initiator = msg.sender;
        uint balanceFund = userBalance[initiator];
        require(balanceFund > 0, "Zero Balance");
-       require(fundToWithdraw <= balanceFund, "Insufficient Balance");
+       require(fundToWithdraw <= balanceFund, "Insufficient Balance");       
        userBalance[initiator] -= fundToWithdraw;
-       initiator.transfer(fundToWithdraw);
        emit LogWithDrawal(initiator,fundToWithdraw);
+       initiator.transfer(fundToWithdraw);
     }
 
 }
