@@ -9,4 +9,4 @@ Splitter is an ethereum based DAPP.
 # withDrawFunds
   This function can be called by any user account to withdraw the corresponding balance from the contract.
    
-![DAPP](./image.jpg?raw=true "DAPP")
+![DAPP](./image.png?raw=true "DAPP")
