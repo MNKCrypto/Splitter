@@ -20,7 +20,7 @@ contract Splitter {
 
     // @dev constructor - validates whether valid receiver addresses are passed and stores them in
     // contract storage
-    constructor () public  {
+    function Splitter() public  {
         owner = msg.sender;
         emit LogCreateContract(owner);
     }	
