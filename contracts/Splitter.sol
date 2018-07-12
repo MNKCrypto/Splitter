@@ -13,15 +13,6 @@ contract Splitter {
     /* Event to log withdrawals */
     event LogWithDrawal(address indexed receiver1,uint256 value);
     
-    
-    // @dev constructor - validates whether valid receiver addresses are passed and stores them in
-    // contract storage
-    function Splitter() public  {
-        owner = msg.sender;
-        isPaused = false;
-        emit LogCreateContract(owner);
-    }	
-    
     //modifier
     modifier onlyOwner{
         require(msg.sender == owner);
@@ -32,7 +23,14 @@ contract Splitter {
         require(!isPaused);
         _;
     }
-
+    
+    // @dev constructor - sets the owner and activates the contract
+    function Splitter() public  {
+        owner = msg.sender;
+        isPaused = false;
+        emit LogCreateContract(owner);
+    }	
+    
     // Public functions
     // @dev This function allows any user to split funds equally
     // among the receivers
@@ -54,7 +52,7 @@ contract Splitter {
     // @dev This function allows receivers / owners to withdraw their balance
     // fund from the contract
     // @param Fund to be withdrawn
-    function withDrawFunds(uint fundToWithdraw) public isActive{
+    function withDrawFunds(uint fundToWithdraw) public isActive {
        uint balanceFund = userBalance[msg.sender];
        require(balanceFund > 0, "Zero Balance");
        require(fundToWithdraw <= balanceFund, "Insufficient Balance");       
